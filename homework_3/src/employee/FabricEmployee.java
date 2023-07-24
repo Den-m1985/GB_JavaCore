@@ -1,3 +1,5 @@
+package employee;
+
 import employee.Employee;
 
 import java.util.ArrayList;
@@ -7,7 +9,7 @@ public class FabricEmployee {
 
 
     public ArrayList<Employee> createArrayEmployee(int count) {
-        ArrayList<Employee> employee = new ArrayList<>();
+        ArrayList<Employee> employees = new ArrayList<>();
         Random random = new Random();
         /*
         private String name;
@@ -24,6 +26,7 @@ public class FabricEmployee {
                 "Rodriguezson", "Martinezon" };
         String[] professions = { "Doctor", "Engineer", "Teacher", "Artist", "Writer", "Programmer", "Lawyer", "Chef",
                 "Architect", "Scientist" };
+        String[] levels = {"junior", "middle", "senior"};
 
         for (int i = 0; i < count; i++) {
             int randomIndexName = random.nextInt(nameArray.length);
@@ -35,18 +38,23 @@ public class FabricEmployee {
             int randomIndexPatronymic = random.nextInt(patronymicArray.length);
             String patronymic = patronymicArray[randomIndexPatronymic];
 
-            int randomIndexProfessions = random.nextInt(patronymicArray.length);
+            int randomIndexProfessions = random.nextInt(professions.length);
             String jobTitle = professions[randomIndexProfessions];
+
+            int randomIndexlevel = random.nextInt(levels.length);
+            String level = levels[randomIndexlevel];
 
             int rand1 = random.nextInt(1000000, 9999999);
             String phoneNumber = "+79" + rand1;
 
-            int salary = random.nextInt(20000, 500000000);
+            int salary = random.nextInt(1000, 5000);
             int age = random.nextInt(20, 90);
 
-            employee.add(new Employee(name, secondName, patronymic, jobTitle, phoneNumber, salary, age));
+            Employee employee = new Employee();
+            employee.createEmployee(name, secondName, patronymic, jobTitle, level, phoneNumber, salary, age);
+            employees.add(employee);
         }
-        return employee;
+        return employees;
     }
 
 }
