@@ -18,23 +18,25 @@ public class Task1 {
     6.Метод возвращает true, если значения верны или false в другом случае.
      */
     public static void main(String[] args) {
-
+        String login = "ffffffffffпffffffffff";
+        String password = "gdhfgbgfnfgsnf";
+        String confirmPassword = "gdhfgbgfnfgsnf";
+        System.out.println(loginPasw(login, password, confirmPassword));
     }
 
-    public static boolean loginPasw(String login, String password, String confirmPassword) throws WrongLoginException, WrongPasswordException {
-        boolean flag = false;
-        if (login.length() > 20) {
-            flag = true;
-
-        } else {
-            throw new WrongLoginException();
+    public static boolean loginPasw(String login, String password, String confirmPassword) {
+        try {
+            if (login.length() <= 20) {
+                throw new WrongLoginException("20", String.valueOf(login.length()));
+            }
+            if (password.length() > 20 || !password.equals(confirmPassword)) {
+                throw new WrongPasswordException("20", String.valueOf(password.length()));
+            }
+            return true;
+        } catch (WrongLoginException | WrongPasswordException e) {
+            e.printStackTrace();
+            return false;
         }
-        if (password.length() >= 20 && password.equals(confirmPassword)) {
-            flag = true;
-        } else {
-            throw new WrongPasswordException();
-        }
-        return flag;
     }
 
 
