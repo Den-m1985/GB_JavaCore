@@ -20,8 +20,17 @@ public class Buyer {
         return "Buyer: " +
                 "name= " + name +
                 ", secondName= " + secondName +
-                ", patronymic= " + patronymic  +
-                ", phoneNumber= " + phoneNumber+
+                ", patronymic= " + patronymic +
+                ", phoneNumber= " + phoneNumber +
                 ", age= " + age;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Buyer buyer = (Buyer) o;
+        return age == buyer.age && name.equals(buyer.name) && secondName.equals(buyer.secondName) && patronymic.equals(buyer.patronymic) && phoneNumber.equals(buyer.phoneNumber);
+    }
+
 }
