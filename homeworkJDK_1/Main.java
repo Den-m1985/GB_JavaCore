@@ -1,8 +1,8 @@
-import java.io.UnsupportedEncodingException;
-
 public class Main {
-    public static void main(String[] args) throws UnsupportedEncodingException {
+
+    public static void main(String[] args) {
         new ClientGUI();
         new ServerWindow();
     }
+
 }
