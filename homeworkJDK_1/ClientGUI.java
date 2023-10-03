@@ -1,17 +1,19 @@
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 
 public class ClientGUI extends JFrame {
     private static final int WINDOW_WIDTH = 500;
     private static final int WINDOW_HEIGHT = 500;
-    private String nameWindow = "Chat Client";
+    String nameWindow = "Chat Client";
     String[] auth;
     JTextArea textArea;
+    String path = "Log.txt";
+    String IP = "127.0.0.1";
+    String PORT = "8080";
+    int widthButtonSend = 80;
 
 
     public ClientGUI() {
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         ScreenLocator();
         setTitle(nameWindow);
@@ -19,6 +21,8 @@ public class ClientGUI extends JFrame {
         add(northButton(), BorderLayout.NORTH);
         add(textField(), BorderLayout.CENTER);
         add(sendTextField(), BorderLayout.SOUTH);
+
+        textArea.append(new ReadLog(path).readTxtFile());
 
         setVisible(true);
     }
@@ -34,7 +38,7 @@ public class ClientGUI extends JFrame {
     }
 
 
-    private JButton northButton(){
+    private JButton northButton() {
         JButton btnAuth = new JButton("Authentication");
         btnAuth.addActionListener(e -> auth = enterLoginPassword());
         return btnAuth;
@@ -42,21 +46,26 @@ public class ClientGUI extends JFrame {
 
 
     public String[] enterLoginPassword() {
+        JTextField ip = new JTextField(IP);
+        JTextField port = new JTextField(PORT);
         JTextField loginField = new JTextField();
         JPasswordField passwordField = new JPasswordField();
 
-        Object[] message = {"Login:", loginField, "Password:", passwordField};
+        Object[] message = {"IP: ", ip,
+                "Port: ", port,
+                "Login:", loginField,
+                "Password:", passwordField};
 
         int option = JOptionPane.showOptionDialog(null, message,
-                "Login and Password", JOptionPane.OK_CANCEL_OPTION,
+                "Connect server", JOptionPane.OK_CANCEL_OPTION,
                 JOptionPane.INFORMATION_MESSAGE, null, null, null);
         if (option == JOptionPane.OK_OPTION) {
             String login = loginField.getText();
             String password = new String(passwordField.getPassword());
-            textArea.append("Login and Password add");
+            textArea.append("Connect successful" + System.lineSeparator());
             return new String[]{login, password};
         } else {
-            textArea.append("Login and Password dialog canceled");
+            textArea.append("Connect dialog canceled" + System.lineSeparator());
         }
         return null;
     }
@@ -64,49 +73,36 @@ public class ClientGUI extends JFrame {
 
     private JScrollPane textField() {
         textArea = new JTextArea();
-        textArea.setWrapStyleWord(true); // перенос по словам
         textArea.setLineWrap(true); // переносит текст если поле заполнено
         textArea.setEditable(false);  // неизменяемый текст
-        JScrollPane scrollPane = new JScrollPane(textArea);
         textArea.setBackground(new Color(220, 220, 220));
 
-        return scrollPane;
+        return new JScrollPane(textArea);
     }
 
 
     private JPanel sendTextField() {
-
-        JPanel panel = new JPanel(new GridBagLayout());
-        Border panelBorder = BorderFactory.createLineBorder(Color.gray,2);
-        panel.setBorder(panelBorder);
+        JPanel panel = new JPanel(new BorderLayout());
 
         JTextArea textField = new JTextArea();
-        textField.setWrapStyleWord(true); // перенос по словам
         textField.setLineWrap(true); // переносит текст если поле заполнено
         textField.setBackground(Color.orange);
 
         JButton btnSend = new JButton("Send");
         btnSend.addActionListener(e -> {
             String text = textField.getText();
-            textArea.append(text + System.lineSeparator());
+            String resultText = text + System.lineSeparator();
+            textArea.append(resultText);
+            new WriteLog(path).writeTxt(resultText);
             textField.setText(""); // Очищаем JTextArea
         });
 
-        // Добавляем JTextField и JButton на панель с GridBagLayout
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.fill = GridBagConstraints.BOTH; // Растягиваем JTextArea по высоте и ширине
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
-        panel.add(textField, gbc);
-
-        gbc.fill = GridBagConstraints.VERTICAL; // Растягиваем кнопку по высоте
-        gbc.weightx = 0.0;
-        gbc.weighty = 1.0;
-        panel.add(btnSend, gbc);
+        panel.add(textField, BorderLayout.CENTER);
+        panel.add(btnSend, BorderLayout.EAST);
 
         // Устанавливаем высоту кнопки, основываясь на высоте JTextArea в JScrollPane
         int preferredHeight = textField.getPreferredSize().height;
-        btnSend.setPreferredSize(new Dimension(80, preferredHeight));
+        btnSend.setPreferredSize(new Dimension(widthButtonSend, preferredHeight));
 
         return panel;
     }

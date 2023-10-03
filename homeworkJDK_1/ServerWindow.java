@@ -4,8 +4,10 @@ import java.awt.*;
 public class ServerWindow extends JFrame {
     private static final int WINDOW_WIDTH = 500;
     private static final int WINDOW_HEIGHT = 500;
-    private String nameWindow = "Chat server";
+    String nameWindow = "Chat server";
     JTextArea textArea;
+    ClientGUI clientGUI;
+    public boolean isServerWorking;
 
 
     public ServerWindow() {
@@ -47,21 +49,21 @@ public class ServerWindow extends JFrame {
         JPanel panel = new JPanel(new BorderLayout());
 
         JButton btnStart = new JButton("Start");
-        btnStart.addActionListener(e -> textArea.append("Start"));
+        btnStart.addActionListener(e -> {
+            isServerWorking = true;
+            textArea.append("Server started" + System.lineSeparator());
+            clientGUI = new ClientGUI();
+        });
         JButton btnStop = new JButton("Stop");
-        btnStop.addActionListener(e -> textArea.append("Stop"));
+        btnStop.addActionListener(e -> {
+            isServerWorking = false;
+            textArea.append("Server stopped" + System.lineSeparator());
+        });
 
-        // Создаем панель для размещения кнопок по центру
-        JPanel buttonPanel = new JPanel(new GridBagLayout());
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 2));
+        buttonPanel.add(btnStart);
+        buttonPanel.add(btnStop);
 
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.fill = GridBagConstraints.HORIZONTAL; // Растягиваем кнопки горизонтально
-        gbc.weightx = 1.0; // Устанавливаем вес для растяжения
-
-        buttonPanel.add(btnStart, gbc);
-        buttonPanel.add(btnStop, gbc);
-
-        // Размещаем панель с кнопками по центру основной панели
         panel.add(buttonPanel, BorderLayout.CENTER);
 
         return panel;
