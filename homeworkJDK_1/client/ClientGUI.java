@@ -1,19 +1,30 @@
+package client;
+
+import server.ReadLog;
+import server.ServerWindow;
+import server.WriteLog;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class ClientGUI extends JFrame {
     private static final int WINDOW_WIDTH = 500;
     private static final int WINDOW_HEIGHT = 500;
+    private ServerWindow server;
     String nameWindow = "Chat Client";
-    String[] auth;
-    JTextArea textArea;
+    String login;
     String path = "Log.txt";
     String IP = "127.0.0.1";
     String PORT = "8080";
+    String[] auth;
     int widthButtonSend = 80;
+    private boolean connect;
+    JTextArea textArea;
 
 
-    public ClientGUI() {
+    public ClientGUI(ServerWindow server) {
+        this.server = server;
+
         setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         ScreenLocator();
         setTitle(nameWindow);
@@ -22,7 +33,7 @@ public class ClientGUI extends JFrame {
         add(textField(), BorderLayout.CENTER);
         add(sendTextField(), BorderLayout.SOUTH);
 
-        textArea.append(new ReadLog(path).readTxtFile());
+        //textArea.append(new ReadLog(path).readTxtFile());
 
         setVisible(true);
     }
@@ -37,13 +48,11 @@ public class ClientGUI extends JFrame {
         setLocation(x, y);
     }
 
-
     private JButton northButton() {
         JButton btnAuth = new JButton("Authentication");
         btnAuth.addActionListener(e -> auth = enterLoginPassword());
         return btnAuth;
     }
-
 
     public String[] enterLoginPassword() {
         JTextField ip = new JTextField(IP);
@@ -60,16 +69,16 @@ public class ClientGUI extends JFrame {
                 "Connect server", JOptionPane.OK_CANCEL_OPTION,
                 JOptionPane.INFORMATION_MESSAGE, null, null, null);
         if (option == JOptionPane.OK_OPTION) {
-            String login = loginField.getText();
+            login = loginField.getText();
             String password = new String(passwordField.getPassword());
-            textArea.append("Connect successful" + System.lineSeparator());
+            //textArea.append("Connect successful" + System.lineSeparator());
+            connectToServer();
             return new String[]{login, password};
         } else {
             textArea.append("Connect dialog canceled" + System.lineSeparator());
         }
         return null;
     }
-
 
     private JScrollPane textField() {
         textArea = new JTextArea();
@@ -78,6 +87,10 @@ public class ClientGUI extends JFrame {
         textArea.setBackground(new Color(220, 220, 220));
 
         return new JScrollPane(textArea);
+    }
+
+    public void answer(String text) {
+        appendLog(text);
     }
 
 
@@ -99,12 +112,47 @@ public class ClientGUI extends JFrame {
 
         panel.add(textField, BorderLayout.CENTER);
         panel.add(btnSend, BorderLayout.EAST);
-
         // Устанавливаем высоту кнопки, основываясь на высоте JTextArea в JScrollPane
         int preferredHeight = textField.getPreferredSize().height;
         btnSend.setPreferredSize(new Dimension(widthButtonSend, preferredHeight));
 
         return panel;
+    }
+//+++
+    private void connectToServer() {
+        if (server.connectClient(this)) {
+            appendLog("Server connect successful");
+            northButton().setVisible(false);
+            connect = true;
+            String log = server.getLog();
+            if (log != null)
+                appendLog(log);
+            else appendLog("Server connect unsuccessful");
+        }
+    }
+
+
+//+++
+    public void disconnectFromServer() {
+        if (connect){
+            northButton().setVisible(true);
+            connect = false;
+            server.disconnectUser(this);
+            appendLog("You was disconnect from server");
+        }
+    }
+//+++
+    private void appendLog(String text) {
+        textArea.append(text + System.lineSeparator());
+    }
+
+    public void messsage(){
+        if (connect){
+            if (!login.equals("")){
+                server.sendMessage(login + " connect");
+            }
+            appendLog("Server is'n connect");
+        }
     }
 
 }
