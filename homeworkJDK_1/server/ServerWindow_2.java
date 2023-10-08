@@ -1,6 +1,5 @@
 package server;
 
-import client.Client;
 import client.ClientGUI;
 import repository.ReadLog;
 import repository.WriteLog;
@@ -10,17 +9,17 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ServerWindow extends JFrame {
+public class ServerWindow_2 extends JFrame {
     public static final int WINDOW_WIDTH = 500;
     public static final int WINDOW_HEIGHT = 500;
-    public static String filePathLog = "repository/Log.txt";
+    public static String filePathLog = "Log.txt";
     String nameWindow = "Chat server";
     JTextArea textArea;
     public boolean isServerWorking;
-    List<Client> clientList;
+    List<ClientGUI> clientList;
 
 
-    public ServerWindow() {
+    public ServerWindow_2() {
         clientList = new ArrayList<>();
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -45,8 +44,8 @@ public class ServerWindow extends JFrame {
         setLocation(x, y);
     }
 
-
-    public boolean connectUser(Client client){
+    //+++++
+    public boolean connectUser(ClientGUI client){
         if (!isServerWorking)
             return false;
         clientList.add(client);
@@ -84,12 +83,9 @@ public class ServerWindow extends JFrame {
                 appendLog("Сервер уже был остановлен");
             } else {
                 isServerWorking = false;
-                for (int i = 0; i < clientList.size(); i++) {
-                    disconnectUser(clientList.get(i));
+                for (ClientGUI clientGUI: clientList){
+                    disconnectUser(clientGUI);
                 }
-//                for (Client clientGUI: clientList){
-//                    disconnectUser(clientGUI);
-//                }
                 //TODO поправить удаление
                 appendLog("Сервер остановлен!");
             }
@@ -103,37 +99,33 @@ public class ServerWindow extends JFrame {
 
         return panel;
     }
-
-    public String getHistory() {
+    //+++++
+    public String getLog() {
         return new ReadLog(filePathLog).readTxtFile();
     }
-
+    //++++
     public void sendMessage(String text){
-
-        if (isServerWorking) {
-            //appendLog(text);
-            answerAll(text);
-            //new WriteLog(filePathLog).writeTxt(text);
-        }
+        if (isServerWorking)
+            return;
+        appendLog(text);
+        answerAll(text);
+        new WriteLog(filePathLog).writeTxt(text);
     }
 
     private void appendLog(String text){
         textArea.append(text + System.lineSeparator());
     }
 
-
     private void answerAll(String text){
-        for (Client client:clientList) {
-            client.printText(text);
+        for (ClientGUI clientGUI:clientList) {
+            clientGUI.answer(text);
         }
     }
-
-    public void disconnectUser(Client client){
-        System.out.println(clientList.size() + "size");
-        System.out.println(client.getName());
-        clientList.remove(client);
-        if (client != null){
-            client.disconnect();
+    //++++
+    public void disconnectUser(ClientGUI clientGUI){
+        clientList.remove(clientGUI);
+        if (clientGUI != null){
+            clientGUI.disconnectFromServer();
         }
     }
 

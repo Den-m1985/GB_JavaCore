@@ -1,4 +1,4 @@
-package server;
+package repository;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -13,7 +13,7 @@ public class WriteLog {
 
     public void writeTxt(String data) {
         String str = new ReadLog(path).readTxtFile();
-        String result = str + System.lineSeparator() + data;
+        String result = str + data;
         fileWriter(result);
     }
 
