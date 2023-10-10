@@ -11,7 +11,7 @@ public class Storage implements Repository {
 
     @Override
     public void setHistory(String text) {
-        new WriteLog(filePathLog).writeTxt(text);
+        new SaveToFile(filePathLog).appendToFile(text);
     }
 
 }

@@ -24,7 +24,7 @@ public class ReadLog {
                 e.printStackTrace();
             }
         } else {
-            new WriteLog(filePath).fileWriter("");
+            new SaveToFile(filePath).appendToFile("");
         }
         return csvString.toString();
     }

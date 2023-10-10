@@ -5,19 +5,19 @@ import server.ServerGUI;
 public class Client {
 
     private String name;
-    private final ClientGUI_test clientView;
+    private final ClientGUI clientView;
     private final ServerGUI serverGui;
     private boolean connected;
 
-    public Client(ClientGUI_test clientView, ServerGUI serverWindow) {
+    public Client(ClientGUI clientView, ServerGUI serverGUI) {
         this.clientView = clientView;
-        this.serverGui = serverWindow;
+        this.serverGui = serverGUI;
     }
 
     public boolean connectToServer(String name) {
         this.name = name;
         if (serverGui.server.connectUser(this)) {
-            printText("Вы успешно подключились!\n");
+            printText("Вы успешно подключились!" + System.lineSeparator());
             connected = true;
             String log = serverGui.server.getHistory();
             if (log != null) {
@@ -30,7 +30,6 @@ public class Client {
         }
     }
 
-    //мы посылаем
     public void sendMessage(String message) {
         if (connected) {
             if (!message.isEmpty()) {
@@ -41,11 +40,6 @@ public class Client {
         }
     }
 
-    //нам посылают
-    public void serverAnswer(String answer) {
-        printText(answer);
-    }
-
     public void disconnect() {
         if (connected) {
             connected = false;
@@ -53,10 +47,6 @@ public class Client {
             serverGui.server.disconnectUser(this);
             printText("Вы были отключены от сервера!");
         }
-    }
-
-    public String getName() {
-        return name;
     }
 
     public void printText(String text) {

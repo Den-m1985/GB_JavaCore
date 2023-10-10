@@ -1,12 +1,14 @@
-import client.ClientGUI_test;
+import client.ClientGUI;
 import server.ServerGUI;
 
 public class Main {
 
     public static void main(String[] args) {
         ServerGUI serverGUI = new ServerGUI();
-        new ClientGUI_test(serverGUI);
-        new ClientGUI_test(serverGUI);
+        int count = 4;
+        for (int i = 0; i < count; i++) {
+            new ClientGUI(serverGUI);
+        }
     }
 
 }

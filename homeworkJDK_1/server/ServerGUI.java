@@ -32,11 +32,10 @@ public class ServerGUI extends JFrame implements ServerView {
         int screenWidth = getToolkit().getScreenSize().width;
         int screenHeight = getToolkit().getScreenSize().height;
         // find coordinate window to set
-        int x = (screenWidth) / 2;
+        int x = (screenWidth - getWidth()) / 2;
         int y = (screenHeight - getHeight()) / 2;
         setLocation(x, y);
     }
-
 
     private JScrollPane textField() {
         textArea = new JTextArea();
@@ -76,12 +75,10 @@ public class ServerGUI extends JFrame implements ServerView {
         return panel;
     }
 
-
     @Override
     public void appendLog(String text) {
         textArea.append(text + System.lineSeparator());
     }
-
 
     @Override
     protected void processWindowEvent(WindowEvent e) {
@@ -89,7 +86,6 @@ public class ServerGUI extends JFrame implements ServerView {
         if (e.getID() == WindowEvent.WINDOW_CLOSING)
             disconnectUsers();
     }
-
 
     public void disconnectUsers() {
         server.disconnectAllUsers();
