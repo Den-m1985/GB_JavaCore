@@ -63,8 +63,8 @@ public class ServerGUI extends JFrame implements ServerView {
                 appendLog("Сервер уже был остановлен");
             } else {
                 server.setServerWorking(false);
-                disconnectUsers();
                 appendLog("Сервер остановлен!");
+                disconnectUsers();
             }
         });
         JPanel buttonPanel = new JPanel(new GridLayout(1, 2));
