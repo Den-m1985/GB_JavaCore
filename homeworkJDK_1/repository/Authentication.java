@@ -32,6 +32,7 @@ public class Authentication {
     }
 
     private boolean checkLoginPassw(User user) {
+        if (user == null)return false;
         String name = user.getName();
         String password = user.getPassword();
         FindUser checkUser = new FindUser(filePathAuth, name, password);
