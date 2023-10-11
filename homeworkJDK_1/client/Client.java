@@ -1,25 +1,25 @@
 package client;
 
-import server.ServerGUI;
+import server.Server;
 
 public class Client {
 
     private String name;
     private final ClientGUI clientView;
-    private final ServerGUI serverGui;
+    private final Server server;
     private boolean connected;
 
-    public Client(ClientGUI clientView, ServerGUI serverGUI) {
+    public Client(ClientGUI clientView, Server server) {
         this.clientView = clientView;
-        this.serverGui = serverGUI;
+        this.server = server;
     }
 
     public boolean connectToServer(String name) {
         this.name = name;
-        if (serverGui.server.connectUser(this)) {
+        if (server.connectUser(this)) {
             printText("Вы успешно подключились!" + System.lineSeparator());
             connected = true;
-            String log = serverGui.server.getHistory();
+            String log = server.getHistory();
             if (log != null) {
                 printText(log);
             }
@@ -33,7 +33,7 @@ public class Client {
     public void sendMessage(String message) {
         if (connected) {
             if (!message.isEmpty()) {
-                serverGui.server.sendMessage(name + ": " + message);
+                server.sendMessage(name + ": " + message);
             }
         } else {
             printText("Нет подключения к серверу");
@@ -44,7 +44,7 @@ public class Client {
         if (connected) {
             connected = false;
             clientView.disconnectFromServer();
-            serverGui.server.disconnectUser(this);
+            server.disconnectUser(this);
             printText("Вы были отключены от сервера!");
         }
     }

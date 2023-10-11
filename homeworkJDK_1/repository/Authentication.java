@@ -53,9 +53,9 @@ public class Authentication {
                 "Enter Login Password", JOptionPane.OK_CANCEL_OPTION,
                 JOptionPane.INFORMATION_MESSAGE, null, null, null);
         if (option == JOptionPane.OK_OPTION) {
-            String login = loginField.getText();
+            userName = loginField.getText();
             String password = new String(passwordField.getPassword());
-            return new User(login, password);
+            return new User(userName, password);
         } else {
             JOptionPane.showMessageDialog(null, "Неверно имя пользователя или пароль");
         }

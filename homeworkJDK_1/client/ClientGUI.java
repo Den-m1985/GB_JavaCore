@@ -1,7 +1,7 @@
 package client;
 
 import repository.Authentication;
-import server.ServerGUI;
+import server.Server;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,7 +22,7 @@ public class ClientGUI extends JFrame implements ClientView {
     JPanel northPanel;
 
 
-    public ClientGUI(ServerGUI server) {
+    public ClientGUI(Server server) {
         this.client = new Client(this, server);
         auth = new Authentication();
 

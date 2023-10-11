@@ -13,8 +13,8 @@ public class ServerGUI extends JFrame implements ServerView {
     JTextArea textArea;
 
 
-    public ServerGUI() {
-        server = new Server();
+    public ServerGUI(Server server) {
+        this.server = server;
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         ScreenLocator();

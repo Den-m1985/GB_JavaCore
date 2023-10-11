@@ -1,6 +1,7 @@
 package server;
 
 import client.Client;
+import repository.Authentication;
 import repository.Storage;
 
 import java.util.ArrayList;
@@ -9,12 +10,16 @@ import java.util.List;
 
 public class Server {
     private final Storage storage = new Storage();
+    public ServerGUI serverGUI;
+    Authentication auth;
     private final List<Client> clientList;
     public boolean isServerWorking;
 
 
     public Server() {
         clientList = new ArrayList<>();
+        serverGUI = new ServerGUI(this);
+        auth = new Authentication();
     }
 
     public boolean connectUser(Client client) {
