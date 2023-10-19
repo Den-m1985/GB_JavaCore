@@ -1,22 +1,28 @@
 
-
 public class Pair<K, V> {
-//    Node<K> key1;
-//    Node<V> value2;
-//    Node<K,V> next;
-//    private int size = 0;
+    private K key;
+    private V value;
+
+    public Pair(K key, V value) {
+        this.key = key;
+        this.value = value;
+    }
 
     public K getFirst() {
-
-        //return (e = getNode(key)) == null ? null : e.value;
-        return null;
+        return key;
     }
 
-    public V getSecond(Object key) {
+    public V getSecond() {
 
-        return null;
+        return value;
     }
 
-
+    @Override
+    public String toString() {
+        return "Pair{" +
+                "key=" + key +
+                ", value=" + value +
+                '}';
+    }
 
 }
