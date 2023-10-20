@@ -5,7 +5,7 @@ public class Employee {
     private long id;
     private final String name;
     private final byte experience;
-    private final List <String> arrayPhoneNumber;
+    private final List<String> arrayPhoneNumber;
 
     public Employee(long id, String name, String phoneNumber, byte experience) {
         this.id = id;

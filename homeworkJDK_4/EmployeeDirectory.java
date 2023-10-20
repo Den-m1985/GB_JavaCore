@@ -1,11 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
-/*
-    Добавить метод, который ищет сотрудника по стажу (может быть список)
-    Добавить метод, который выводит номер телефона сотрудника по имени (может быть список)
-    Добавить метод, который ищет сотрудника по табельному номеру
-    Добавить метод добавление нового сотрудника в справочник
-     */
+
 public class EmployeeDirectory {
     private final List<Employee> employeeArray;
     long id;
@@ -15,12 +10,11 @@ public class EmployeeDirectory {
     }
 
     public void addEmployee(String name, String phoneNumber, byte experience) {
-
         employeeArray.add(new Employee(++id, name, phoneNumber, experience));
     }
 
-    public void printDirectory(){
-        for (Employee employee:employeeArray) {
+    public void printDirectory() {
+        for (Employee employee : employeeArray) {
             System.out.println(employee.toString());
         }
     }
@@ -35,14 +29,41 @@ public class EmployeeDirectory {
         return returnEmployeeArray;
     }
 
-//    public Employee getEmplByPhone(String phoneNumber) {
-//        for (Employee employee : employeeArray) {
-//            if (employee.getPhoneNumbers() == experience) {
-//                returnEmployeeArray.add(employee);
-//            }
-//        }
-//        return null;
-//    }
+    public void addPhoneNumber(long id, String phoneNumber) {
+        Employee employee = getEmplById(id);
+        employee.setPhoneNumber(phoneNumber);
+    }
 
+    public Employee getEmplByPhone(String phoneNumber) {
+        for (Employee employee : employeeArray) {
+            List<String> numbers = employee.getPhoneNumbers();
+            for (String str : numbers) {
+                if (str.equals(phoneNumber)) {
+                    return employee;
+                }
+            }
+        }
+        return null;
+    }
+
+    public Employee getEmplByName(String name) {
+        for (Employee employee : employeeArray) {
+            String emplName = employee.getName();
+            if (emplName.equals(name)) {
+                return employee;
+            }
+        }
+        return null;
+    }
+
+    public Employee getEmplById(long id) {
+        for (Employee employee : employeeArray) {
+            long emplId = employee.getId();
+            if (emplId == id) {
+                return employee;
+            }
+        }
+        return null;
+    }
 
 }
