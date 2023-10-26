@@ -1,32 +1,27 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Semaphore;
 
-import static java.lang.Thread.sleep;
 
 public class Table implements Runnable {
     private final List<Philosopher> philosophers;
-    //private List<String> table;
     private CountDownLatch cdl; // блокирует поток пока значение >0
-    private MyProgramState state;
+    private static final int NUM_PHILOSOPHERS = 5;
+    private static Semaphore[] forks;
 
 
     public Table() {
-        cdl = new CountDownLatch(5);
-        state = new MyProgramState();
+        cdl = new CountDownLatch(NUM_PHILOSOPHERS);
         philosophers = new ArrayList<>();
-        int countPlates = 3;
-        philosophers.add(new Philosopher("Василий", cdl, state, countPlates));
-        philosophers.add(new Philosopher("Петр", cdl, state, countPlates));
-        philosophers.add(new Philosopher("Семен", cdl, state, countPlates));
-        philosophers.add(new Philosopher("50Cent", cdl, state, countPlates));
-        philosophers.add(new Philosopher("Aminem", cdl, state, countPlates));
+        forks = new Semaphore[NUM_PHILOSOPHERS];
+        createForks();
 
-        List<Integer> forks = new ArrayList<>();
-        for (int i = 0; i < philosophers.size(); i++) forks.add(i);
-
-
-
+        philosophers.add(new Philosopher("Василий", cdl, forks[0], forks[1]));
+        philosophers.add(new Philosopher("Петр", cdl, forks[1], forks[2]));
+        philosophers.add(new Philosopher("Семен", cdl, forks[2], forks[3]));
+        philosophers.add(new Philosopher("50_Cent", cdl, forks[3], forks[4]));
+        philosophers.add(new Philosopher("Eminem", cdl, forks[4], forks[0]));
     }
 
 
@@ -35,64 +30,29 @@ public class Table implements Runnable {
         try {
             goOnStart();
             cdl.await();
-
             System.out.println(System.lineSeparator() + "Все сели за стол" + System.lineSeparator());
             startEat();
-            cdl.await();
-
-            sta();
-
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
 
-
-    private void goOnStart() {
-        for (Philosopher philosopher : philosophers) {
-            startThread(philosopher);
+    private void createForks() {
+        for (int i = 0; i < NUM_PHILOSOPHERS; i++) {
+            forks[i] = new Semaphore(1); // Изначально все вилки свободны
         }
     }
 
-
-    private void startThread(Runnable runnable) {
-        new Thread(runnable).start();
+    private void goOnStart() {
+        for (Philosopher philosopher : philosophers) {
+            new Thread(philosopher).start();
+        }
     }
-
 
     private void startEat() throws InterruptedException {
         for (Philosopher philosopher : philosophers) {
             philosopher.go();
         }
     }
-
-
-    private void startThink() throws InterruptedException {
-        for (Philosopher philosopher : philosophers) {
-            philosopher.go();
-        }
-    }
-
-    private void sta() throws InterruptedException {
-        while (!state.isFinish()) {
-            //поменяли флаг
-            state.setSwitcher(!state.isSwitcher());
-            if (!state.isSwitcher()) {
-                System.out.println("пауза");
-            }
-            sleep(1000);
-        }
-    }
-
-//    private void createTable(){
-//        table = new ArrayList<>();
-//        for (int i = 0; i < 15; i++) {
-//            String name = philosophers.get(i).getName();
-//            table.add("вилка левая " + name);
-//            table.add(name);
-//            table.add("вилка правая " + name);
-//        }
-//    }
-
 
 }

@@ -1,33 +1,24 @@
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Semaphore;
 
 import static java.lang.Thread.sleep;
 
 public class Philosopher implements Runnable {
-    private String name;
-    private String eat = "eat";
-    private String think = "think";
-    private boolean eatOrThink;
-    private int countPlates;
+    private final String name;
     private CountDownLatch cdl;
     private Random random;
-    private MyProgramState state;
+    private final Semaphore leftFork;
+    private final Semaphore rightFork;
+    private static final int MEAL_LIMIT = 3; // Максимальное количество съеденных тарелок
+    private int mealsEaten = 0;
 
-    public Philosopher(String name, CountDownLatch cdl, MyProgramState state, int countPlates) {
+    public Philosopher(String name, CountDownLatch cdl, Semaphore leftFork, Semaphore rightFork) {
         this.name = name;
         this.cdl = cdl;
-        this.countPlates = countPlates;
-        this.state = state;
         random = new Random();
-    }
-
-
-    public String setEatOrThink() {
-        if (state.isSwitcher()) {
-            return eat;
-        } else {
-            return think;
-        }
+        this.leftFork = leftFork;
+        this.rightFork = rightFork;
     }
 
 
@@ -38,13 +29,16 @@ public class Philosopher implements Runnable {
             synchronized (this) {
                 wait();
             }
-            godghhfg();
-
+            while (mealsEaten < MEAL_LIMIT) {
+                think();
+                takeForks();
+                eat();
+                putForks();
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
-
 
     private void goOnTable() throws InterruptedException {
         sleep(random.nextInt(2, 5) * 1000L);
@@ -52,31 +46,41 @@ public class Philosopher implements Runnable {
         cdl.countDown();
     }
 
-
     public void go() throws InterruptedException {
         synchronized (this) {
             notify();
         }
-        sleep(1000L);
-        System.out.println(name + " начал " + setEatOrThink());
+        sleep(random.nextInt(1, 3) * 1000L);
     }
 
+    private void think() throws InterruptedException {
+        System.out.println(name + " is thinking.");
+        Thread.sleep(random.nextInt(2, 5) * 1000L);
+    }
 
-    public void godghhfg() {
-        while (!state.isFinish() && countPlates > 0) {
-            if (state.isSwitcher()) {
-                System.out.println(name + " осталось съесть " + countPlates-- + " тарелок спагети");
-                try {
-                    sleep(2000);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
+    private void takeForks() throws InterruptedException {
+        leftFork.acquire();
+        System.out.println(name + " has taken left forks");
+        rightFork.acquire();
+        System.out.println(name + " has taken right forks");
+    }
+
+    private void eat() throws InterruptedException {
+        mealsEaten++;
+        if (mealsEaten == MEAL_LIMIT) {
+            System.out.println(name + " is overeat spaghetti  +++++++++++++++++");
+        } else {
+            System.out.println(name + " is eating " + mealsEaten + " plate spaghetti");
         }
-        state.setFinish(true);
+
+        Thread.sleep(random.nextInt(2, 5) * 1000L);
     }
 
-    public String getName() {
-        return name;
+    private void putForks() {
+        leftFork.release();
+        System.out.println(name + " has put down left forks");
+        rightFork.release();
+        System.out.println(name + " has put down right forks");
     }
+
 }
