@@ -8,7 +8,7 @@ public class Table implements Runnable {
     private final List<Philosopher> philosophers;
     private CountDownLatch cdl; // блокирует поток пока значение >0
     private static final int NUM_PHILOSOPHERS = 5;
-    private static Semaphore[] forks;
+    private static Semaphore[] forks; // https://metanit.com/java/tutorial/8.6.php
 
 
     public Table() {
