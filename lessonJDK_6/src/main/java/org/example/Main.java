@@ -9,7 +9,8 @@ public class Main {
     }
 
     public void printFile() throws IOException {
-        InputStream inputStream = getClass().getResourceAsStream("file.txt");
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream("file.txt");
+        assert inputStream != null;
         System.out.println(new String(inputStream.readAllBytes()));
     }
 }
