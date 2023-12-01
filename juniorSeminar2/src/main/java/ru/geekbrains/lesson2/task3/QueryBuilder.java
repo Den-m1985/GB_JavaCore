@@ -115,14 +115,30 @@ public class QueryBuilder {
 
     }
 
-    /**
-     * TODO: Доработать в рамках домашней работы
-     * @param clazz
-     * @param primaryKey
-     * @return
+    /*
+     Доработайте метод генерации запроса
+     на удаление объекта из таблицы БД
+     DELETE FROM <Table> WHERE ID = '<id>'
      */
     public String buildDeleteQuery(Class<?> clazz, UUID primaryKey){
-        return null;
+        StringBuilder query = new StringBuilder("DELETE FROM ");
+
+        if (clazz.isAnnotationPresent(Table.class)) {
+            Table tableAnnotation = clazz.getAnnotation(Table.class);
+            query.append(tableAnnotation.name()).append(" WHERE ");
+        }
+
+        Field[] fields = clazz.getDeclaredFields();
+        for (Field field : fields) {
+            if (field.isAnnotationPresent(Column.class)) {
+                Column columnAnnotation = field.getAnnotation(Column.class);
+                if (columnAnnotation.primaryKey()) {
+                    query.append(columnAnnotation.name()).append(" = ").append(primaryKey);
+                    break;
+                }
+            }
+        }
+        return query.toString();
     }
 
 }
