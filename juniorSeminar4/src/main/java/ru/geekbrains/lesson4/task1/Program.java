@@ -2,7 +2,6 @@ package ru.geekbrains.lesson4.task1;
 
 import ru.geekbrains.lesson4.models.Student;
 
-import java.beans.Statement;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,7 +24,7 @@ public class Program {
 
     public static void main(String[] args) {
 
-        String url = "jdbc:mysql://students.db:3306/";
+        String url = "jdbc:mysql://localhost:3307/studentsDB";
         String user = "root";
         String password = "password";
 

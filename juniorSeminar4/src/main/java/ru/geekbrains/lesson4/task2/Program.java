@@ -32,7 +32,7 @@ public class Program
 
             // Создание объекта
             Student student = Student.create();
-            session.save(student);
+
             System.out.println("Object student save successfully");
 
             // Чтение объекта из базы данных
